@@ -1,0 +1,35 @@
+<?php
+
+/**
+ * @file
+ * Module.
+ */
+
+use Drupal\Core\Entity\EntityInterface;
+use Drupal\Core\Entity\Display\EntityViewDisplayInterface;
+use Drupal\node_smena\Controller\KubaturaSum;
+use Drupal\node_prihod\Controller\Kubaturnik;
+
+/**
+ * Node_smena_entity_presave.
+ */
+function node_smena_entity_presave(EntityInterface $node) {
+  if (method_exists($node, 'getType') && $node->getType() == 'smena') {
+    $date = strtotime($node->field_smena_data->value);
+    $title = format_date($date, 'tolko_data');
+    $node->title->setValue($title);
+  }
+}
+
+/**
+ * Node_smena_entity_view.
+ */
+function node_smena_entity_view(array &$build, EntityInterface $entity, EntityViewDisplayInterface $display, $view_mode) {
+  if (method_exists($entity, 'getType') && $entity->getType() == 'smena') {
+    //$build['vremya_raboti'] = \Drupal::formBuilder()->getForm('Drupal\node_smena\Form\ChasiRaboti', $entity);
+    /*$build['kubatura'] = [
+      '#markup' => '<span class="kub">Кубатура общая за смену: </span>' . number_format($kubatura_sum, 3, ".", " ") . ' куб.м',
+    ];*/
+    $entity->save(TRUE);
+  }
+}
